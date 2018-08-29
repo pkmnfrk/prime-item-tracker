@@ -2,7 +2,8 @@ Metroid Prime Item Tracker
 ==========================
 
 This tool is designed to easily keep track of your items in a Metroid Prime Randomizer run. It has
-spots for every major upgrade and item.
+spots for every major upgrade and item, and is designed in a compact form factor for adding to
+stream overlays.
 
 For most items, just click on them to highlight them, indicating they have been collected. For tank
 items (Energy Tanks, etc) clicking on them will increment the count, while Shift-Clicking on them

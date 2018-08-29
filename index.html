@@ -1,17 +1,25 @@
 <!doctype html>
 <html>
 <head>
+<title>Metroid Prime Item Tracker</title>
 <style>
 
 body {
 	background: black;
+	color: white;
+	user-select: none;
+	-webkit-user-select: none; /* webkit (safari, chrome) browsers */
+    -moz-user-select: none; /* mozilla browsers */
+    -khtml-user-select: none; /* webkit (konqueror) browsers */
+    -ms-user-select: none; /* IE10+ */
 }
+
+a { color: white; }
 
 #artifacts {
 	position: relative;
 	width: 111px;
 	height: 133px;
-	/*background: gray;*/
 	margin-left: 64px;
 }
 
@@ -46,14 +54,7 @@ body {
 	margin: 8px;
 	
 	padding-left: 40px;
-	color: white;
 	line-height: 32px;
-	
-	user-select: none;
-	-webkit-user-select: none; /* webkit (safari, chrome) browsers */
-    -moz-user-select: none; /* mozilla browsers */
-    -khtml-user-select: none; /* webkit (konqueror) browsers */
-    -ms-user-select: none; /* IE10+ */
 }
 
 </style>
@@ -233,5 +234,6 @@ body {
 		return a;
 	}
 </script>
+<div id="copyright"><a href="https://pkmnfrk.github.io/prime-item-tracker/">Metroid Prime Item Tracker</a> - &copy; 2018 Mike Caron</div>
 </body>
 </html>
