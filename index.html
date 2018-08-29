@@ -1,0 +1,237 @@
+<!doctype html>
+<html>
+<head>
+<style>
+
+body {
+	background: black;
+}
+
+#artifacts {
+	position: relative;
+	width: 111px;
+	height: 133px;
+	/*background: gray;*/
+	margin-left: 64px;
+}
+
+#artifacts div {
+	position: absolute;
+}
+
+#items {
+	width: 260px;
+}
+
+.item {
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+	width: 32px;
+	height: 32px;
+	margin: 8px;
+	opacity: 0.35;
+}
+
+.item.collected {
+	opacity: 1;
+}
+
+.tank {
+	background-repeat: no-repeat;
+	background-position: left;
+	background-size: contain;
+	height: 32px;
+	margin: 8px;
+	
+	padding-left: 40px;
+	color: white;
+	line-height: 32px;
+	
+	user-select: none;
+	-webkit-user-select: none; /* webkit (safari, chrome) browsers */
+    -moz-user-select: none; /* mozilla browsers */
+    -khtml-user-select: none; /* webkit (konqueror) browsers */
+    -ms-user-select: none; /* IE10+ */
+}
+
+</style>
+</head>
+<body>
+
+<div id="artifacts">
+	
+</div>
+
+<div id="items">
+
+</div>
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
+<script>
+	var items = {
+		artifacts: {
+			chozo: [40, 0, 48, 49],
+			nature: [2, 37, 40, 30],
+			world: [0, 68, 33, 26],
+			newborn: [26, 88, 35, 41],
+			spirit: [68, 81, 43, 52],
+			sun: [88, 53, 14, 28],
+			life_giver: [52, 76, 13, 19],
+			truth: [64, 56, 18, 16],
+			wild: [37, 53, 19, 18],
+			warrior: [44, 72, 12, 10],
+			strength: [51, 50, 17, 15],
+			elder: [63, 72, 16, 16]
+		},
+		upgrades: [
+			//ball upgrades
+			"morph",
+			"boost",
+			"spider",
+			"bomb",
+			"space_jump",
+			
+			//beam upgrades
+			"varia",
+			"gravity",
+			"phazon",
+			"power_bomb",
+			"grapple",
+			
+			//suits
+			"charge",
+			"wave",
+			"ice",
+			"plasma",
+			"thermal",
+			
+			//visors
+			"super_missile",
+			"wavebuster",
+			"ice_spreader",
+			"flamethrower",
+			"xray",
+			
+		],
+		
+		tanks: {
+			etank: { max: 14 },
+			missile: { max: 50 },
+			power_bomb_pack: { max: 4 },
+		}
+		
+		
+	}
+	
+	var item_counts = {};
+	
+	var css = "";
+	var z = 0;
+	
+	for(var artifact in items.artifacts)
+	{
+		
+		css += "#" + artifact + "{"
+		css += "left: " + items.artifacts[artifact][0] + "px;";
+		css += "top: " + items.artifacts[artifact][1] + "px;";
+		css += "width: " + items.artifacts[artifact][2] + "px;";
+		css += "height: " + items.artifacts[artifact][3] + "px;";
+		css += "background-image: url('artifacts-assets/" + artifact + "_u.png');"
+		//css += "background-color: red;";
+		//css += "border: 1px solid yellow;"
+		css += "z-index: " + z + ";";
+		css += "}";
+		css += "#" + artifact + ".collected {";
+		css += "background-image: url('artifacts-assets/" + artifact + "_c.png');"
+		css += "}";
+		
+		var a = document.createElement("div");
+		a.id = artifact;
+		//a.className = "";
+		$(a).click(onClickArtifact);
+		document.getElementById("artifacts").appendChild(a);
+		
+		z += 1;
+	}
+	
+	for(var item = 0; item < items.upgrades.length; item++)
+	{
+		makeDiv(items.upgrades[item], "item", document.getElementById("items"), onClickArtifact);
+		
+		css += "#" + items.upgrades[item] + " {";
+		css += "background-image: url('items-assets/" + items.upgrades[item] + ".png');"
+		css += "}";
+	}
+	
+	for(var item in items.tanks)
+	{
+		var div = makeDiv(item, "tank", document.getElementById("items"), genOnClickItem(item));
+		
+		$(div).text("0 / " + items.tanks[item].max);
+		
+		css += "#" + item + " {";
+		css += "background-image: url('items-assets/" + item + ".png');"
+		css += "}";
+	}
+	
+	makeStyle(css);
+	
+	function onClickArtifact()
+	{
+		$(this).toggleClass("collected");
+	}
+	
+	function genOnClickItem(item)
+	{
+		return function(e)
+		{
+			e.preventDefault();
+			
+			if(!item_counts[item])
+				item_counts[item] = 0;
+			
+			var mod = e.shiftKey ? -1 : 1;
+			
+			item_counts[item] += mod;
+			
+			if(item_counts[item] < 0)
+				item_counts[item] = 0;
+			if(item_counts[item] > items.tanks[item].max)
+				item_counts[item] = items.tanks[item].max;
+		
+			
+			$("#" + item).text(item_counts[item] + " / " + items.tanks[item].max);
+			
+			
+		}
+	}
+	
+	function makeStyle(css)
+	{
+		var style = document.createElement("style");
+		style.type = "text/css";
+		style.innerHTML = css;
+		document.getElementsByTagName('head')[0].appendChild(style);
+	}
+	
+	function makeDiv(id, className, root, onClick)
+	{
+		var a = document.createElement("div");
+		a.id = id;
+		a.className = className;
+		if(onClick)
+		{
+			$(a).click(onClick);
+		}
+		root.appendChild(a);
+		
+		return a;
+	}
+</script>
+</body>
+</html>
