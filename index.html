@@ -18,7 +18,7 @@ body {
 	position: relative;
 	width: 111px;
 	height: 133px;
-	margin-left: 84px;
+	margin-left: 64px;
 }
 
 #artifacts div {
@@ -27,7 +27,6 @@ body {
 
 #items {
 	width: 260px;
-	margin-left: 20px;
 }
 
 .item {
@@ -59,6 +58,7 @@ body {
 #copyright, #copyright a
 {
 	color: #888;
+	font-size: 10pt;
 }
 
 </style>
@@ -126,8 +126,8 @@ body {
 		
 		tanks: {
 			etank: { max: 14 },
-			missile: { max: 50 },
-			power_bomb_pack: { max: 4 },
+			missile: { max: 50, per: 5 },
+			power_bomb_pack: { max: 4, per: 1 },
 		}
 		
 		
@@ -177,7 +177,7 @@ body {
 	{
 		var div = makeDiv(item, "tank", document.getElementById("items"), genOnClickItem(item));
 		
-		$(div).text("0 / " + items.tanks[item].max);
+		updateLabel(item);
 		
 		css += "#" + item + " {";
 		css += "background-image: url('items-assets/" + item + ".png');"
@@ -189,6 +189,10 @@ body {
 	function onClickArtifact()
 	{
 		$(this).toggleClass("collected");
+		if(this.id == "power_bomb")
+		{
+			updateLabel("power_bomb_pack");
+		}
 	}
 	
 	function genOnClickItem(item)
@@ -208,12 +212,30 @@ body {
 				item_counts[item] = 0;
 			if(item_counts[item] > items.tanks[item].max)
 				item_counts[item] = items.tanks[item].max;
-		
 			
-			$("#" + item).text(item_counts[item] + " / " + items.tanks[item].max);
-			
-			
+			updateLabel(item);
 		}
+	}
+	
+	function updateLabel(item)
+	{
+		var num = item_counts[item] || 0;
+		
+		var text = num + " / " + items.tanks[item].max;
+		
+		if(items.tanks[item].per)
+		{
+			var total = num * items.tanks[item].per;
+			
+			if(item == "power_bomb_pack" && $("#power_bomb").hasClass("collected"))
+			{
+				total += 4;
+			}
+			
+			text += " (total: " + total + ")";
+		}
+		
+		$("#" + item).text(text);
 	}
 	
 	function makeStyle(css)
