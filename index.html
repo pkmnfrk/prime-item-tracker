@@ -196,6 +196,8 @@ body {
 		{
 			updateLabel("power_bomb_pack");
 		}
+		
+		save();
 	}
 	
 	function genOnClickItem(item)
@@ -217,6 +219,8 @@ body {
 				item_counts[item] = items.tanks[item].max;
 			
 			updateLabel(item);
+			
+			save();
 		}
 	}
 	
@@ -262,11 +266,92 @@ body {
 		
 		return a;
 	}
+	
+	function reset()
+	{
+		$(".collected").removeClass("collected");
+		
+		item_counts = {};
+		
+		for(var tank in items.tanks)
+		{
+			updateLabel(tank);
+		}
+	}
+	
+	function reset_button()
+	{
+		reset();
+		save();
+	}
+	
+	function load()
+	{
+		reset();
+		if(!localStorage.file) return;
+		
+		var file = JSON.parse(localStorage.file);
+		
+		for(var artifact of file.artifacts)
+		{
+			$("#" + artifact).addClass("collected");
+		}
+		
+		for(var item of file.upgrades)
+		{
+			$("#" + item).addClass("collected");
+		}
+		
+		for(var tank in file.tanks)
+		{
+			item_counts[tank] = file.tanks[tank];
+			updateLabel(tank);
+		}
+	}
+	
+	function save()
+	{
+		var file = {
+			artifacts: [],
+			upgrades: [],
+			tanks: {}
+		};
+		
+		for(var artifact of $("#artifacts div"))
+		{
+			if($(artifact).hasClass("collected"))
+			{
+				file.artifacts.push(artifact.id);
+			}
+		}
+		
+		for(var item of $(".item"))
+		{
+			if($(item).hasClass("collected"))
+			{
+				file.upgrades.push(item.id);
+			}
+		}
+		
+		for(var tank in item_counts)
+		{
+			file.tanks[tank] = item_counts[tank];
+		}
+		
+		localStorage.file = JSON.stringify(file);
+	}
+	
+	$(function() {
+		load();
+	})
+	
 </script>
 <br/>
 <br/>
 <div id="copyright">
 	<a href="https://pkmnfrk.github.io/prime-item-tracker/">https://pkmnfrk.github.io/prime-item-tracker/</a>
 </div>
+<br/>
+<button id="reset" onclick="reset_button()">Reset</button>
 </body>
 </html>
