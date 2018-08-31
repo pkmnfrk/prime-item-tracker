@@ -1,6 +1,8 @@
 Metroid Prime Item Tracker
 ==========================
 
+Online at: https://pkmnfrk.github.io/prime-item-tracker/
+
 This tool is designed to easily keep track of your items in a Metroid Prime Randomizer run. It has
 spots for every major upgrade and item, and is designed in a compact form factor for adding to
 stream overlays.
